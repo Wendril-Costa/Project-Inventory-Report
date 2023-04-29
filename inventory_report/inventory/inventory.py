@@ -1,4 +1,6 @@
 import csv
+import json
+import xml.etree.ElementTree as ET
 from inventory_report.reports.simple_report import SimpleReport
 from inventory_report.reports.complete_report import CompleteReport
 
@@ -6,15 +8,24 @@ from inventory_report.reports.complete_report import CompleteReport
 class Inventory:
     @staticmethod
     def import_data(file_path, report_type):
-        with open(file_path, 'r') as file:
-            reader = csv.DictReader(file)
-            products = list(reader)
+        products = Inventory._get_products(file_path)
 
         if report_type == "simples":
             report = SimpleReport.generate(products)
         elif report_type == "completo":
             report = CompleteReport.generate(products)
-        else:
-            raise ValueError("Esse tipo de relatório é inválido.")
 
         return report
+
+    @staticmethod
+    def _get_products(file_path):
+        extension = file_path.split(".")[-1]
+        with open(file_path, "r") as file:
+            if extension == "csv":
+                products = list(csv.DictReader(file))
+            elif extension == "json":
+                products = json.load(file)
+            elif extension == "xml":
+                tree = ET.parse(file)
+                products = [product.attrib for product in tree.getroot()]
+        return products
