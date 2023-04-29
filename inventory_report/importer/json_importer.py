@@ -3,9 +3,10 @@ from inventory_report.importer.importer import Importer
 
 
 class JsonImporter(Importer):
-    @classmethod
-    def import_data(cls, file_path: str):
-        if '.json' not in file_path:
-            raise ValueError('Arquivo inválido')
-        with open(file_path, 'r') as file:
+    @staticmethod
+    def import_data(file_name: str):
+        if not file_name.endswith(".json"):
+            raise ValueError("Arquivo inválido")
+
+        with open(file_name, "r") as file:
             return json.load(file)
