@@ -1,12 +1,15 @@
-import xmltodict
 from inventory_report.importer.importer import Importer
 
 
-class XmlImporter(Importer):
-    @staticmethod
-    def import_data(file_path):
-        if not file_path.endswith('.xml'):
-            raise ValueError('Arquivo inválido')
+import xmltodict
 
-        with open(file_path, "r") as file:
-            return xmltodict.parse(file.read())["dataset"]["record"]
+
+class XmlImporter(Importer):
+    @classmethod
+    def import_data(cls, path):
+        if path.endswith(".xml"):
+            with open(path) as xml_file:
+                file = xmltodict.parse(xml_file.read())
+                products_file = file["dataset"]["record"]
+                return products_file
+        raise ValueError("Arquivo inválido")

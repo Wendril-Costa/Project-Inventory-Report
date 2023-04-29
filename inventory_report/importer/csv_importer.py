@@ -3,10 +3,10 @@ from inventory_report.importer.importer import Importer
 
 
 class CsvImporter(Importer):
-    @staticmethod
-    def import_data(file_path):
-        if not file_path.endswith('.csv'):
+    @classmethod
+    def import_data(cls, file_path: str):
+        if '.csv' not in file_path:
             raise ValueError('Arquivo inválido')
-
-        with open(file_path, "r") as file:
-            return list(csv.DictReader(file))
+        with open(file_path, 'r') as file:
+            read_data = csv.DictReader(file, delimiter=',', quotechar='"')
+            return list(read_data)
