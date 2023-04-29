@@ -1,6 +1,6 @@
 import csv
 import json
-import xml.etree.ElementTree as ET
+import xmltodict
 from inventory_report.reports.simple_report import SimpleReport
 from inventory_report.reports.complete_report import CompleteReport
 
@@ -26,6 +26,5 @@ class Inventory:
             elif extension == "json":
                 products = json.load(file)
             elif extension == "xml":
-                tree = ET.parse(file)
-                products = [product.attrib for product in tree.getroot()]
+                products = xmltodict.parse(file.read())["dataset"]["record"]
         return products
